@@ -4,11 +4,31 @@ from PyQt5.QtCore import *
 from Ui_ui_main import *
 import sqlite3
 import login
-import scanpage
-import upload
+import os
 
 import logging
 logging.basicConfig(filename='app.log', level=logging.ERROR)
+
+allProfileDataPath = r'D:\DATA-GOLOGIN\Data'
+
+list_profile = os.listdir(allProfileDataPath)
+list_profile.sort()
+
+def sort_list():
+    global list_profile
+    len_list = len(list_profile)
+    number_list = []
+    char_list = []
+    for i in range(0, len(list_profile)):
+        if list_profile[i].isdigit():
+            number_list.append(int(list_profile[i]))
+        else:
+            char_list.append(list_profile[i])
+    number_list.sort()
+    list_profile.clear()
+    for i in range(0, len(number_list)):
+        list_profile.append(str(number_list[i]))
+    list_profile += char_list
 
 class ItemDelegate(QtWidgets.QStyledItemDelegate):
     cellEditingStarted = QtCore.pyqtSignal(int, int)
@@ -44,9 +64,10 @@ class MyForm(QMainWindow):
         self.ui.tableWidget.setItemDelegate(self.delegate)
         self.delegate.closeEditor.connect(self.test1)
         self.point = [0,0]
-    
+        # self.addDataProfile()
         self.showData()
         self._threads = []
+
 
     def test1(self):
         if self.point[1] == 2:
@@ -63,6 +84,28 @@ class MyForm(QMainWindow):
 
     def test2(self, row, column):
         self.point = [row, column]
+    
+
+    def addDataProfile(self):
+        sort_list()
+        conn = sqlite3.connect('db_app.db')
+        cur = conn.cursor()
+        for profile_id in list_profile:
+            profile_path = os.path.join(allProfileDataPath, profile_id)
+            try:
+                cur.execute('INSERT INTO Profiles( \
+                    profile_id, \
+                    profile_path \
+                ) VALUES (?,?)',
+                    (profile_id, profile_path))
+                conn.commit()
+            except Exception:
+                import traceback 
+                print(traceback.format_exc())  
+            # self.Show_all()
+            # self.statusBar().showMessage('New user Added')
+        conn.close()
+
 
         # self.getData(1)
     def createData(self):
