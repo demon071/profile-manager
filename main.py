@@ -256,627 +256,627 @@ class MyForm(QMainWindow):
     
     
         
-    @pyqtSlot(dict)
-    def addAccount(self, data):
-        cookie = data['cookie']
-        token = data['token']
-        username = data['name']
-        profile_path = data['profile_path']
-        userId = data['userId']
-        name = profile_path.split('/')[-1]
-        userAgent = data['userAgent']
-        platform = data['platform']
-        result = self.createOrUpdateAccount(
-            profile=profile_path,
-            name = name,
-            cookie=cookie,
-            token=token,
-            userId=userId,
-            username=username,
-            userAgent=userAgent,
-            platform=platform,
-            fanpageOfUser=''
-            )
-        if result:
-            self.addProfile(userId=userId, username=username, folder_upload='')
+#     @pyqtSlot(dict)
+#     def addAccount(self, data):
+#         cookie = data['cookie']
+#         token = data['token']
+#         username = data['name']
+#         profile_path = data['profile_path']
+#         userId = data['userId']
+#         name = profile_path.split('/')[-1]
+#         userAgent = data['userAgent']
+#         platform = data['platform']
+#         result = self.createOrUpdateAccount(
+#             profile=profile_path,
+#             name = name,
+#             cookie=cookie,
+#             token=token,
+#             userId=userId,
+#             username=username,
+#             userAgent=userAgent,
+#             platform=platform,
+#             fanpageOfUser=''
+#             )
+#         if result:
+#             self.addProfile(userId=userId, username=username, folder_upload='')
         
-        self.showData()
-        self.showDataProfile()
+#         self.showData()
+#         self.showDataProfile()
 
-    def createOrUpdateAccount(self, profile, name, cookie, userAgent, token, platform, userId,  username, fanpageOfUser):
-        result = self.addAccountToDatabase(
-            profile=profile,
-            name = name,
-            cookie=cookie,
-            token=token,
-            userId=userId,
-            username=username,
-            userAgent=userAgent,
-            platform=platform,
-            fanpageOfUser=fanpageOfUser
-            )
-        if result:
-            return True    
-        else:
-            self.updateAccount(
-            profile=profile,
-            name = name,
-            cookie=cookie,
-            token=token,
-            userId=userId,
-            username=username,
-            userAgent=userAgent,
-            platform=platform,
-            fanpageOfUser=fanpageOfUser)
-            return False
-
-
-    def updateAccount(
-        self, 
-        profile,
-        name, 
-        cookie, 
-        userAgent, 
-        token, 
-        platform, 
-        userId, 
-        username, 
-        fanpageOfUser
-    ):
-        flag = True
-        try:
-            conn = sqlite3.connect('db_app.db')
-            cur = conn.cursor()
-            try:
-                cur.execute('UPDATE Accounts SET \
-                    profile=?,\
-                    name=?, \
-                    cookie=?, \
-                    userAgent=?, \
-                    token=?, \
-                    platform=?, \
-                    username=?, \
-                    fanpageOfUser=? \
-                    WHERE userId=?',
-                    (profile,
-                    name, 
-                    cookie, 
-                    userAgent,
-                    token, 
-                    platform, 
-                    username, 
-                    fanpageOfUser,
-                    userId))
-            except Exception:
-                flag = False
-                import traceback 
-                print(traceback.format_exc())
-            conn.commit()
-            conn.close()
-            # self.Show_all()
-            # self.statusBar().showMessage('New user Added')
-            print('update')
-        except Exception:
-            flag = False
-            import traceback 
-            print(traceback.format_exc())
-        return flag
-
-    def btnState(self, b):
-        if b.objectName() == 'checkBox':
-            if b.isChecked() == True:
-                self.tag1 = True
-            else:
-                self.tag1 = False
-        if b.objectName() == 'checkBox_2':
-            if b.isChecked() == True:
-                self.title1 = True
-            else:
-                self.title1 = False
-        if b.objectName() == 'checkBox_3':
-            if b.isChecked() == True:
-                self.tag2 = True
-            else:
-                self.tag2 = False
-        if b.objectName() == 'checkBox_4':
-            if b.isChecked() == True:
-                self.title2 = True
-            else:
-                self.title2 = False
+#     def createOrUpdateAccount(self, profile, name, cookie, userAgent, token, platform, userId,  username, fanpageOfUser):
+#         result = self.addAccountToDatabase(
+#             profile=profile,
+#             name = name,
+#             cookie=cookie,
+#             token=token,
+#             userId=userId,
+#             username=username,
+#             userAgent=userAgent,
+#             platform=platform,
+#             fanpageOfUser=fanpageOfUser
+#             )
+#         if result:
+#             return True    
+#         else:
+#             self.updateAccount(
+#             profile=profile,
+#             name = name,
+#             cookie=cookie,
+#             token=token,
+#             userId=userId,
+#             username=username,
+#             userAgent=userAgent,
+#             platform=platform,
+#             fanpageOfUser=fanpageOfUser)
+#             return False
 
 
-    def runUpload(self):
-        list_profile = []
-        rowPosition = self.ui.tableWidget_2.rowCount()
-        start = int(self.ui.spinBox_2.text())
-        end = int(self.ui.spinBox_3.text())
-        limit = int(self.ui.spinBox_4.text())
-        for x in range(0, rowPosition):
-            item = self.ui.tableWidget_2.item(x, 0)
-            tt = item.checkState()
-            if(tt == 2):
-                accountID = self.ui.tableWidget_2.item(x, 0).text()
-                video_path = self.ui.tableWidget_2.item(x, 2).text() if self.ui.tableWidget_2.item(x, 2).text() != '' else ''
-                dataAccount = self.getData(accountID, '2')
-                # print(dataAccount, accountID)
-                if dataAccount['status'] == 0 and video_path != '':
-                    userId = dataAccount['userId']
-                    cookie = dataAccount['cookie']
-                    token = dataAccount['token']
-                    userAgent = dataAccount['userAgent']
+#     def updateAccount(
+#         self, 
+#         profile,
+#         name, 
+#         cookie, 
+#         userAgent, 
+#         token, 
+#         platform, 
+#         userId, 
+#         username, 
+#         fanpageOfUser
+#     ):
+#         flag = True
+#         try:
+#             conn = sqlite3.connect('db_app.db')
+#             cur = conn.cursor()
+#             try:
+#                 cur.execute('UPDATE Accounts SET \
+#                     profile=?,\
+#                     name=?, \
+#                     cookie=?, \
+#                     userAgent=?, \
+#                     token=?, \
+#                     platform=?, \
+#                     username=?, \
+#                     fanpageOfUser=? \
+#                     WHERE userId=?',
+#                     (profile,
+#                     name, 
+#                     cookie, 
+#                     userAgent,
+#                     token, 
+#                     platform, 
+#                     username, 
+#                     fanpageOfUser,
+#                     userId))
+#             except Exception:
+#                 flag = False
+#                 import traceback 
+#                 print(traceback.format_exc())
+#             conn.commit()
+#             conn.close()
+#             # self.Show_all()
+#             # self.statusBar().showMessage('New user Added')
+#             print('update')
+#         except Exception:
+#             flag = False
+#             import traceback 
+#             print(traceback.format_exc())
+#         return flag
 
-                    list_profile.append({
-                        'userId': userId,
-                        'cookie': cookie,
-                        'token': token,
-                        'userAgent': userAgent,
-                        'video_folder': video_path,
-                        'row': x,
-                    })
-        if len(list_profile):
-            self._threads = []
-            obj = upload.uploadProfiles(listAccounts=list_profile, timeStart = start, timeEnd = end, limit = limit, rmHashtag=self.tag1, rmTitle=self.title1)
-            thread = QThread()
-            obj.moveToThread(thread)
-            self._threads.append((thread, obj))
-            # signal from object
-            # obj.sign_chrome.connect(self.signChrome)
-            obj.sign_msg.connect(self.msg)
-            obj.sign_exit.connect(thread.quit)
-            # # send signal from gui
-            # self.SIGN_SYNC.connect(obj.getCookie)
-            # run thread
-            thread.started.connect(obj.run)
-            thread.finished.connect(obj.deleteLater)
-            thread.start()
-        else:
-            print('không có profile khả dụng')
+#     def btnState(self, b):
+#         if b.objectName() == 'checkBox':
+#             if b.isChecked() == True:
+#                 self.tag1 = True
+#             else:
+#                 self.tag1 = False
+#         if b.objectName() == 'checkBox_2':
+#             if b.isChecked() == True:
+#                 self.title1 = True
+#             else:
+#                 self.title1 = False
+#         if b.objectName() == 'checkBox_3':
+#             if b.isChecked() == True:
+#                 self.tag2 = True
+#             else:
+#                 self.tag2 = False
+#         if b.objectName() == 'checkBox_4':
+#             if b.isChecked() == True:
+#                 self.title2 = True
+#             else:
+#                 self.title2 = False
+
+
+#     def runUpload(self):
+#         list_profile = []
+#         rowPosition = self.ui.tableWidget_2.rowCount()
+#         start = int(self.ui.spinBox_2.text())
+#         end = int(self.ui.spinBox_3.text())
+#         limit = int(self.ui.spinBox_4.text())
+#         for x in range(0, rowPosition):
+#             item = self.ui.tableWidget_2.item(x, 0)
+#             tt = item.checkState()
+#             if(tt == 2):
+#                 accountID = self.ui.tableWidget_2.item(x, 0).text()
+#                 video_path = self.ui.tableWidget_2.item(x, 2).text() if self.ui.tableWidget_2.item(x, 2).text() != '' else ''
+#                 dataAccount = self.getData(accountID, '2')
+#                 # print(dataAccount, accountID)
+#                 if dataAccount['status'] == 0 and video_path != '':
+#                     userId = dataAccount['userId']
+#                     cookie = dataAccount['cookie']
+#                     token = dataAccount['token']
+#                     userAgent = dataAccount['userAgent']
+
+#                     list_profile.append({
+#                         'userId': userId,
+#                         'cookie': cookie,
+#                         'token': token,
+#                         'userAgent': userAgent,
+#                         'video_folder': video_path,
+#                         'row': x,
+#                     })
+#         if len(list_profile):
+#             self._threads = []
+#             obj = upload.uploadProfiles(listAccounts=list_profile, timeStart = start, timeEnd = end, limit = limit, rmHashtag=self.tag1, rmTitle=self.title1)
+#             thread = QThread()
+#             obj.moveToThread(thread)
+#             self._threads.append((thread, obj))
+#             # signal from object
+#             # obj.sign_chrome.connect(self.signChrome)
+#             obj.sign_msg.connect(self.msg)
+#             obj.sign_exit.connect(thread.quit)
+#             # # send signal from gui
+#             # self.SIGN_SYNC.connect(obj.getCookie)
+#             # run thread
+#             thread.started.connect(obj.run)
+#             thread.finished.connect(obj.deleteLater)
+#             thread.start()
+#         else:
+#             print('không có profile khả dụng')
     
-    def runMultiUpload(self):
-        try:
-            list_profile = []
-            rowPosition = self.ui.tableWidget_2.rowCount()
-            start = int(self.ui.spinBox_2.text())
-            end = int(self.ui.spinBox_3.text())
-            limit = int(self.ui.spinBox_4.text())
-            for x in range(0, rowPosition):
-                item = self.ui.tableWidget_2.item(x, 0)
-                tt = item.checkState()
-                if(tt == 2):
-                    accountID = self.ui.tableWidget_2.item(x, 0).text()
-                    video_path = self.ui.tableWidget_2.item(x, 2).text() if self.ui.tableWidget_2.item(x, 2).text() != '' else ''
-                    dataAccount = self.getData(accountID, '2')
-                    # print(dataAccount, accountID)
-                    if dataAccount['status'] == 0 and video_path != '':
-                        userId = dataAccount['userId']
-                        cookie = dataAccount['cookie']
-                        token = dataAccount['token']
-                        userAgent = dataAccount['userAgent']
+#     def runMultiUpload(self):
+#         try:
+#             list_profile = []
+#             rowPosition = self.ui.tableWidget_2.rowCount()
+#             start = int(self.ui.spinBox_2.text())
+#             end = int(self.ui.spinBox_3.text())
+#             limit = int(self.ui.spinBox_4.text())
+#             for x in range(0, rowPosition):
+#                 item = self.ui.tableWidget_2.item(x, 0)
+#                 tt = item.checkState()
+#                 if(tt == 2):
+#                     accountID = self.ui.tableWidget_2.item(x, 0).text()
+#                     video_path = self.ui.tableWidget_2.item(x, 2).text() if self.ui.tableWidget_2.item(x, 2).text() != '' else ''
+#                     dataAccount = self.getData(accountID, '2')
+#                     # print(dataAccount, accountID)
+#                     if dataAccount['status'] == 0 and video_path != '':
+#                         userId = dataAccount['userId']
+#                         cookie = dataAccount['cookie']
+#                         token = dataAccount['token']
+#                         userAgent = dataAccount['userAgent']
 
-                        list_profile.append({
-                            'userId': userId,
-                            'cookie': cookie,
-                            'token': token,
-                            'userAgent': userAgent,
-                            'video_folder': video_path,
-                            'row': x,
-                        })
-            if len(list_profile):
-                self._threads = []
-                thread_count = int(self.ui.thread_count.text())
-                for y in range(thread_count):
-                    worker = upload.multiUploadProfiles(x=y, thread_count=thread_count, listAccounts=list_profile, timeStart = start, timeEnd = end, limit = limit, rmHashtag=self.tag1, rmTitle=self.title1)
-                    self._threads.append(worker)
-                    worker.sign_msg.connect(self.msg)
-                    worker.finished.connect(worker.deleteLater)
-                    # worker.finished.connect(self.update_video)
-                    worker.start()
-            # obj = 
-            # thread = QThread()
-            # obj.moveToThread(thread)
-            # self._threads.append((thread, obj))
-            # # signal from object
-            # # obj.sign_chrome.connect(self.signChrome)
-            # obj.sign_msg.connect(self.msg)
-            # obj.sign_exit.connect(thread.quit)
-            # # # send signal from gui
-            # # self.SIGN_SYNC.connect(obj.getCookie)
-            # # run thread
-            # thread.started.connect(obj.run)
-            # thread.finished.connect(obj.deleteLater)
-            # thread.start()
-            else:
-                print('không có profile khả dụng')
-        except Exception:
-            logging.error('Failed to run', exc_info=True)
+#                         list_profile.append({
+#                             'userId': userId,
+#                             'cookie': cookie,
+#                             'token': token,
+#                             'userAgent': userAgent,
+#                             'video_folder': video_path,
+#                             'row': x,
+#                         })
+#             if len(list_profile):
+#                 self._threads = []
+#                 thread_count = int(self.ui.thread_count.text())
+#                 for y in range(thread_count):
+#                     worker = upload.multiUploadProfiles(x=y, thread_count=thread_count, listAccounts=list_profile, timeStart = start, timeEnd = end, limit = limit, rmHashtag=self.tag1, rmTitle=self.title1)
+#                     self._threads.append(worker)
+#                     worker.sign_msg.connect(self.msg)
+#                     worker.finished.connect(worker.deleteLater)
+#                     # worker.finished.connect(self.update_video)
+#                     worker.start()
+#             # obj = 
+#             # thread = QThread()
+#             # obj.moveToThread(thread)
+#             # self._threads.append((thread, obj))
+#             # # signal from object
+#             # # obj.sign_chrome.connect(self.signChrome)
+#             # obj.sign_msg.connect(self.msg)
+#             # obj.sign_exit.connect(thread.quit)
+#             # # # send signal from gui
+#             # # self.SIGN_SYNC.connect(obj.getCookie)
+#             # # run thread
+#             # thread.started.connect(obj.run)
+#             # thread.finished.connect(obj.deleteLater)
+#             # thread.start()
+#             else:
+#                 print('không có profile khả dụng')
+#         except Exception:
+#             logging.error('Failed to run', exc_info=True)
 
     
     
 
-    def runUploadPage(self):
-        list_profile = []
-        rowPosition = self.ui.tableWidget_3.rowCount()
-        start = int(self.ui.spinBox_6.text())
-        end = int(self.ui.spinBox_7.text())
-        limit = int(self.ui.spinBox_5.text())
-        for x in range(0, rowPosition):
-            item = self.ui.tableWidget_3.item(x, 0)
-            tt = item.checkState()
-            if(tt == 2):
-                accountID = self.ui.tableWidget_3.item(x, 0).text()
-                video_path = self.ui.tableWidget_3.item(x, 2).text() if self.ui.tableWidget_3.item(x, 2).text() != '' else ''
-                dataAccount = self.getData(accountID, '2')
-                # print(dataAccount, accountID)
-                if dataAccount['status'] == 0 and video_path != '':
-                    userId = dataAccount['userId']
-                    cookie = dataAccount['cookie']
-                    token = dataAccount['token']
-                    userAgent = dataAccount['userAgent']
+#     def runUploadPage(self):
+#         list_profile = []
+#         rowPosition = self.ui.tableWidget_3.rowCount()
+#         start = int(self.ui.spinBox_6.text())
+#         end = int(self.ui.spinBox_7.text())
+#         limit = int(self.ui.spinBox_5.text())
+#         for x in range(0, rowPosition):
+#             item = self.ui.tableWidget_3.item(x, 0)
+#             tt = item.checkState()
+#             if(tt == 2):
+#                 accountID = self.ui.tableWidget_3.item(x, 0).text()
+#                 video_path = self.ui.tableWidget_3.item(x, 2).text() if self.ui.tableWidget_3.item(x, 2).text() != '' else ''
+#                 dataAccount = self.getData(accountID, '2')
+#                 # print(dataAccount, accountID)
+#                 if dataAccount['status'] == 0 and video_path != '':
+#                     userId = dataAccount['userId']
+#                     cookie = dataAccount['cookie']
+#                     token = dataAccount['token']
+#                     userAgent = dataAccount['userAgent']
 
-                    list_profile.append({
-                        'userId': userId,
-                        'cookie': cookie,
-                        'token': token,
-                        'userAgent': userAgent,
-                        'video_folder': video_path,
-                        'row': x,
-                    })
-        if len(list_profile):
-            self._threads = []
-            obj = upload.uploadProfiles(listAccounts=list_profile, timeStart = start, timeEnd = end, limit = limit, rmHashtag=self.tag2, rmTitle=self.title2)
-            thread = QThread()
-            obj.moveToThread(thread)
-            self._threads.append((thread, obj))
-            # signal from object
-            # obj.sign_chrome.connect(self.signChrome)
-            obj.sign_msg.connect(self.msg2)
-            obj.sign_exit.connect(thread.quit)
-            # # send signal from gui
-            # self.SIGN_SYNC.connect(obj.getCookie)
-            # run thread
-            thread.started.connect(obj.run)
-            thread.finished.connect(obj.deleteLater)
-            thread.start()
-        else:
-            print('không có profile khả dụng')
+#                     list_profile.append({
+#                         'userId': userId,
+#                         'cookie': cookie,
+#                         'token': token,
+#                         'userAgent': userAgent,
+#                         'video_folder': video_path,
+#                         'row': x,
+#                     })
+#         if len(list_profile):
+#             self._threads = []
+#             obj = upload.uploadProfiles(listAccounts=list_profile, timeStart = start, timeEnd = end, limit = limit, rmHashtag=self.tag2, rmTitle=self.title2)
+#             thread = QThread()
+#             obj.moveToThread(thread)
+#             self._threads.append((thread, obj))
+#             # signal from object
+#             # obj.sign_chrome.connect(self.signChrome)
+#             obj.sign_msg.connect(self.msg2)
+#             obj.sign_exit.connect(thread.quit)
+#             # # send signal from gui
+#             # self.SIGN_SYNC.connect(obj.getCookie)
+#             # run thread
+#             thread.started.connect(obj.run)
+#             thread.finished.connect(obj.deleteLater)
+#             thread.start()
+#         else:
+#             print('không có profile khả dụng')
 
-    def runMultiUploadPage(self):
-        try:
-            list_profile = []
-            rowPosition = self.ui.tableWidget_3.rowCount()
-            start = int(self.ui.spinBox_6.text())
-            end = int(self.ui.spinBox_7.text())
-            limit = int(self.ui.spinBox_5.text())
-            for x in range(0, rowPosition):
-                item = self.ui.tableWidget_3.item(x, 0)
-                tt = item.checkState()
-                if(tt == 2):
-                    accountID = self.ui.tableWidget_3.item(x, 0).text()
-                    video_path = self.ui.tableWidget_3.item(x, 2).text() if self.ui.tableWidget_3.item(x, 2).text() != '' else ''
-                    dataAccount = self.getData(accountID, '2')
-                    # print(dataAccount, accountID)
-                    if dataAccount['status'] == 0 and video_path != '':
-                        userId = dataAccount['userId']
-                        cookie = dataAccount['cookie']
-                        token = dataAccount['token']
-                        userAgent = dataAccount['userAgent']
+#     def runMultiUploadPage(self):
+#         try:
+#             list_profile = []
+#             rowPosition = self.ui.tableWidget_3.rowCount()
+#             start = int(self.ui.spinBox_6.text())
+#             end = int(self.ui.spinBox_7.text())
+#             limit = int(self.ui.spinBox_5.text())
+#             for x in range(0, rowPosition):
+#                 item = self.ui.tableWidget_3.item(x, 0)
+#                 tt = item.checkState()
+#                 if(tt == 2):
+#                     accountID = self.ui.tableWidget_3.item(x, 0).text()
+#                     video_path = self.ui.tableWidget_3.item(x, 2).text() if self.ui.tableWidget_3.item(x, 2).text() != '' else ''
+#                     dataAccount = self.getData(accountID, '2')
+#                     # print(dataAccount, accountID)
+#                     if dataAccount['status'] == 0 and video_path != '':
+#                         userId = dataAccount['userId']
+#                         cookie = dataAccount['cookie']
+#                         token = dataAccount['token']
+#                         userAgent = dataAccount['userAgent']
 
-                        list_profile.append({
-                            'userId': userId,
-                            'cookie': cookie,
-                            'token': token,
-                            'userAgent': userAgent,
-                            'video_folder': video_path,
-                            'row': x,
-                        })
-            if len(list_profile):
-                self._threads = []
-                thread_count = int(self.ui.thread_count_2.text())
-                for y in range(thread_count):
-                    worker = upload.multiUploadProfiles(x=y, thread_count=thread_count, listAccounts=list_profile, timeStart = start, timeEnd = end, limit = limit, rmHashtag=self.tag2, rmTitle=self.title2)
-                    self._threads.append(worker)
-                    worker.sign_msg.connect(self.msg2)
-                    worker.finished.connect(worker.deleteLater)
-                    # worker.finished.connect(self.update_video)
-                    worker.start()
-            else:
-                print('không có profile khả dụng')
-        except Exception:
-            logging.error('Failed to run upload page', exc_info=True)
+#                         list_profile.append({
+#                             'userId': userId,
+#                             'cookie': cookie,
+#                             'token': token,
+#                             'userAgent': userAgent,
+#                             'video_folder': video_path,
+#                             'row': x,
+#                         })
+#             if len(list_profile):
+#                 self._threads = []
+#                 thread_count = int(self.ui.thread_count_2.text())
+#                 for y in range(thread_count):
+#                     worker = upload.multiUploadProfiles(x=y, thread_count=thread_count, listAccounts=list_profile, timeStart = start, timeEnd = end, limit = limit, rmHashtag=self.tag2, rmTitle=self.title2)
+#                     self._threads.append(worker)
+#                     worker.sign_msg.connect(self.msg2)
+#                     worker.finished.connect(worker.deleteLater)
+#                     # worker.finished.connect(self.update_video)
+#                     worker.start()
+#             else:
+#                 print('không có profile khả dụng')
+#         except Exception:
+#             logging.error('Failed to run upload page', exc_info=True)
 
-    def msg(self, _type, row, text):
-        if _type == 1:
-            self.ui.tableWidget_2.setItem(row, 3, QTableWidgetItem(str(text)))
-        if _type == 2:
-            i = QtWidgets.QListWidgetItem(text)
-            if(row==1):
-                i.setForeground(QtGui.QColor(255, 0, 0))
-            if(row==2):
-                i.setForeground(QtGui.QColor(255, 0, 255))
-            self.ui.listWidget.insertItem(0, i)
+#     def msg(self, _type, row, text):
+#         if _type == 1:
+#             self.ui.tableWidget_2.setItem(row, 3, QTableWidgetItem(str(text)))
+#         if _type == 2:
+#             i = QtWidgets.QListWidgetItem(text)
+#             if(row==1):
+#                 i.setForeground(QtGui.QColor(255, 0, 0))
+#             if(row==2):
+#                 i.setForeground(QtGui.QColor(255, 0, 255))
+#             self.ui.listWidget.insertItem(0, i)
 
-    def msg2(self, _type, row, text):
-        if _type == 1:
-            self.ui.tableWidget_3.setItem(row, 3, QTableWidgetItem(str(text)))
-        if _type == 2:
-            i = QtWidgets.QListWidgetItem(text)
-            if(row==1):
-                i.setForeground(QtGui.QColor(255, 0, 0))
-            if(row==2):
-                i.setForeground(QtGui.QColor(255, 0, 255))
-            self.ui.listWidget_2.insertItem(0, i)
+#     def msg2(self, _type, row, text):
+#         if _type == 1:
+#             self.ui.tableWidget_3.setItem(row, 3, QTableWidgetItem(str(text)))
+#         if _type == 2:
+#             i = QtWidgets.QListWidgetItem(text)
+#             if(row==1):
+#                 i.setForeground(QtGui.QColor(255, 0, 0))
+#             if(row==2):
+#                 i.setForeground(QtGui.QColor(255, 0, 255))
+#             self.ui.listWidget_2.insertItem(0, i)
 
     
         
 
-# XU LY PAGE 
-    def scanPage(self):
-        self.ui.pushButton_4.setEnabled(False)
-        list_profile = []
-        rowPosition = self.ui.tableWidget.rowCount()
-        for x in range(0, rowPosition):
-            item = self.ui.tableWidget.item(x, 0)
-            tt = item.checkState()
-            if(tt == 2):
-                accountID = self.ui.tableWidget.item(x, 0).text()
-                platform = self.ui.tableWidget.item(x, 2).text()
-                if platform == 'Page':
-                    continue
-                else:
-                    dataAccount = self.getData(accountID)
-                    if dataAccount['status'] == 0:
-                        userId = dataAccount['userId']
-                        cookie = dataAccount['cookie']
-                        token = dataAccount['token']
-                        userAgent = dataAccount['userAgent']
-                        profile = dataAccount['profile']
-                        list_profile.append({
-                            'userId': userId,
-                            'cookie': cookie,
-                            'token': token,
-                            'userAgent': userAgent,
-                            'profile': profile
-                        })
+# # XU LY PAGE 
+#     def scanPage(self):
+#         self.ui.pushButton_4.setEnabled(False)
+#         list_profile = []
+#         rowPosition = self.ui.tableWidget.rowCount()
+#         for x in range(0, rowPosition):
+#             item = self.ui.tableWidget.item(x, 0)
+#             tt = item.checkState()
+#             if(tt == 2):
+#                 accountID = self.ui.tableWidget.item(x, 0).text()
+#                 platform = self.ui.tableWidget.item(x, 2).text()
+#                 if platform == 'Page':
+#                     continue
+#                 else:
+#                     dataAccount = self.getData(accountID)
+#                     if dataAccount['status'] == 0:
+#                         userId = dataAccount['userId']
+#                         cookie = dataAccount['cookie']
+#                         token = dataAccount['token']
+#                         userAgent = dataAccount['userAgent']
+#                         profile = dataAccount['profile']
+#                         list_profile.append({
+#                             'userId': userId,
+#                             'cookie': cookie,
+#                             'token': token,
+#                             'userAgent': userAgent,
+#                             'profile': profile
+#                         })
 
-        if len(list_profile):      
-            self._threads = []
-            obj = scanpage.ScanPage(list_profile)
-            thread = QThread()
-            obj.moveToThread(thread)
-            self._threads.append((thread, obj))
-            # signal from object
-            # obj.sign_chrome.connect(self.signChrome)
-            obj.sign_data.connect(self.addPageToDatabase)
-            obj.sign_exit.connect(thread.quit)
-            # # send signal from gui
-            # self.SIGN_SYNC.connect(obj.getCookie)
-            # run thread
-            thread.started.connect(obj.run)
-            thread.finished.connect(obj.deleteLater)
-            thread.finished.connect(lambda: self.ui.pushButton_4.setEnabled(True))
-            thread.start()
+#         if len(list_profile):      
+#             self._threads = []
+#             obj = scanpage.ScanPage(list_profile)
+#             thread = QThread()
+#             obj.moveToThread(thread)
+#             self._threads.append((thread, obj))
+#             # signal from object
+#             # obj.sign_chrome.connect(self.signChrome)
+#             obj.sign_data.connect(self.addPageToDatabase)
+#             obj.sign_exit.connect(thread.quit)
+#             # # send signal from gui
+#             # self.SIGN_SYNC.connect(obj.getCookie)
+#             # run thread
+#             thread.started.connect(obj.run)
+#             thread.finished.connect(obj.deleteLater)
+#             thread.finished.connect(lambda: self.ui.pushButton_4.setEnabled(True))
+#             thread.start()
 
-    def addPageToDatabase(self, list_page):
+#     def addPageToDatabase(self, list_page):
         
-        if len(list_page):
-            for page in list_page:
-                token = page['token']
-                cookie = page['cookie']
-                userId = page['userId']
-                username = page['username']
-                userAgent = page['userAgent']
-                platform = page['platform']
-                fanpageOfUser = page['fanpageOfUser']
-                result = self.createOrUpdateAccount(profile='', name='', cookie=cookie, userAgent=userAgent, userId=userId, token=token, platform=platform, fanpageOfUser=fanpageOfUser, username=username)
-                if result:
-                    self.addPage(userId=userId, username=username, folder_upload='', fanpageOfUser=fanpageOfUser)
-            self.showData()
-            self.showDataPage()
+#         if len(list_page):
+#             for page in list_page:
+#                 token = page['token']
+#                 cookie = page['cookie']
+#                 userId = page['userId']
+#                 username = page['username']
+#                 userAgent = page['userAgent']
+#                 platform = page['platform']
+#                 fanpageOfUser = page['fanpageOfUser']
+#                 result = self.createOrUpdateAccount(profile='', name='', cookie=cookie, userAgent=userAgent, userId=userId, token=token, platform=platform, fanpageOfUser=fanpageOfUser, username=username)
+#                 if result:
+#                     self.addPage(userId=userId, username=username, folder_upload='', fanpageOfUser=fanpageOfUser)
+#             self.showData()
+#             self.showDataPage()
 
     
 
-    def addPage(self, userId, username, folder_upload, fanpageOfUser):
-        try:
-            conn = sqlite3.connect('db_app.db')
-            cur = conn.cursor()
-            try:
-                cur.execute('INSERT INTO Fanpages( \
-                    userId, \
-                    username, \
-                    folder_upload, \
-                    fanpageOfUser \
-                ) VALUES (?,?,?,?)',
-                    ( userId, 
-                    username, 
-                    folder_upload,
-                    fanpageOfUser))
-            except Exception:
-                import traceback 
-                print(traceback.format_exc())
-            conn.commit()
-            conn.close()
-            # self.Show_all()
-            # self.statusBar().showMessage('New user Added')
-        except Exception:
-            import traceback 
-            print(traceback.format_exc())
+#     def addPage(self, userId, username, folder_upload, fanpageOfUser):
+#         try:
+#             conn = sqlite3.connect('db_app.db')
+#             cur = conn.cursor()
+#             try:
+#                 cur.execute('INSERT INTO Fanpages( \
+#                     userId, \
+#                     username, \
+#                     folder_upload, \
+#                     fanpageOfUser \
+#                 ) VALUES (?,?,?,?)',
+#                     ( userId, 
+#                     username, 
+#                     folder_upload,
+#                     fanpageOfUser))
+#             except Exception:
+#                 import traceback 
+#                 print(traceback.format_exc())
+#             conn.commit()
+#             conn.close()
+#             # self.Show_all()
+#             # self.statusBar().showMessage('New user Added')
+#         except Exception:
+#             import traceback 
+#             print(traceback.format_exc())
 
-    def addAccountToDatabase(
-        self, 
-        profile,
-        name, 
-        cookie, 
-        userAgent, 
-        token, 
-        platform, 
-        userId, 
-        username, 
-        fanpageOfUser
-    ):
-        flag = True
-        try:
-            conn = sqlite3.connect('db_app.db')
-            cur = conn.cursor()
-            try:
-                cur.execute('INSERT INTO Accounts( \
-                    profile,\
-                    name, \
-                    cookie, \
-                    userAgent, \
-                    token, \
-                    platform, \
-                    userId, \
-                    username, \
-                    fanpageOfUser \
-                ) VALUES (?,?,?,?,?,?,?,?,?)',
-                    (profile,
-                    name, 
-                    cookie, 
-                    userAgent,
-                    token, 
-                    platform, 
-                    userId, 
-                    username, 
-                    fanpageOfUser))
-            except Exception:
-                flag = False
-                import traceback 
-                print(traceback.format_exc())
-            conn.commit()
-            conn.close()
-            # self.Show_all()
-            # self.statusBar().showMessage('New user Added')
-        except Exception:
-            flag = False
-            import traceback 
-            print(traceback.format_exc())
-        return flag
+#     def addAccountToDatabase(
+#         self, 
+#         profile,
+#         name, 
+#         cookie, 
+#         userAgent, 
+#         token, 
+#         platform, 
+#         userId, 
+#         username, 
+#         fanpageOfUser
+#     ):
+#         flag = True
+#         try:
+#             conn = sqlite3.connect('db_app.db')
+#             cur = conn.cursor()
+#             try:
+#                 cur.execute('INSERT INTO Accounts( \
+#                     profile,\
+#                     name, \
+#                     cookie, \
+#                     userAgent, \
+#                     token, \
+#                     platform, \
+#                     userId, \
+#                     username, \
+#                     fanpageOfUser \
+#                 ) VALUES (?,?,?,?,?,?,?,?,?)',
+#                     (profile,
+#                     name, 
+#                     cookie, 
+#                     userAgent,
+#                     token, 
+#                     platform, 
+#                     userId, 
+#                     username, 
+#                     fanpageOfUser))
+#             except Exception:
+#                 flag = False
+#                 import traceback 
+#                 print(traceback.format_exc())
+#             conn.commit()
+#             conn.close()
+#             # self.Show_all()
+#             # self.statusBar().showMessage('New user Added')
+#         except Exception:
+#             flag = False
+#             import traceback 
+#             print(traceback.format_exc())
+#         return flag
 
 
     
 
-    def getData(self, _id, _type = '1'):
-        conn = sqlite3.connect('db_app.db')
-        cur = conn.cursor()
-        try:
-            if _type == '1':
-                cur.execute('SELECT `profile`, `userId`, `username`, `cookie`, `token`, `userAgent` FROM Accounts WHERE `id`=?',(_id,))
-            if _type == '2':
-                cur.execute('SELECT `profile`, `userId`, `username`, `cookie`, `token`, `userAgent` FROM Accounts WHERE `userId`=?',(_id,))
-            data = cur.fetchone()
-            profile, userId, username, cookie, token, userAgent = data
-            return {
-                'status': 0,
-                'profile': profile,
-                'userId': userId,
-                'username': username,
-                'cookie': cookie,
-                'token': token,
-                'userAgent': userAgent,
+#     def getData(self, _id, _type = '1'):
+#         conn = sqlite3.connect('db_app.db')
+#         cur = conn.cursor()
+#         try:
+#             if _type == '1':
+#                 cur.execute('SELECT `profile`, `userId`, `username`, `cookie`, `token`, `userAgent` FROM Accounts WHERE `id`=?',(_id,))
+#             if _type == '2':
+#                 cur.execute('SELECT `profile`, `userId`, `username`, `cookie`, `token`, `userAgent` FROM Accounts WHERE `userId`=?',(_id,))
+#             data = cur.fetchone()
+#             profile, userId, username, cookie, token, userAgent = data
+#             return {
+#                 'status': 0,
+#                 'profile': profile,
+#                 'userId': userId,
+#                 'username': username,
+#                 'cookie': cookie,
+#                 'token': token,
+#                 'userAgent': userAgent,
                 
-            }
-        except:
-            return {
-                'status': 1
-            }
+#             }
+#         except:
+#             return {
+#                 'status': 1
+#             }
     
 
-    def showDataProfile(self):
-        self.ui.tableWidget_2.clearContents()
-        self.ui.tableWidget_2.setRowCount(0)
-        conn = sqlite3.connect('db_app.db')
-        cur = conn.cursor()
-        cur.execute('SELECT `userId`, `username`, `folder_upload` FROM Profiles')
-        data = cur.fetchall()
-        if data:
-            self.ui.tableWidget_2.insertRow(0)
-            for row, form in enumerate(data):
-                for column, item in enumerate(form):
-                    if column == 0:
-                        chkBoxItem = QTableWidgetItem(str(item))
-                        chkBoxItem.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                            QtCore.Qt.ItemIsEnabled)
-                        chkBoxItem.setCheckState(QtCore.Qt.Checked)
-                        self.ui.tableWidget_2.setItem(row, column, chkBoxItem)
-                    else:
-                        self.ui.tableWidget_2.setItem(row, column, QTableWidgetItem(str(item)))
-                    column += 1
+#     def showDataProfile(self):
+#         self.ui.tableWidget_2.clearContents()
+#         self.ui.tableWidget_2.setRowCount(0)
+#         conn = sqlite3.connect('db_app.db')
+#         cur = conn.cursor()
+#         cur.execute('SELECT `userId`, `username`, `folder_upload` FROM Profiles')
+#         data = cur.fetchall()
+#         if data:
+#             self.ui.tableWidget_2.insertRow(0)
+#             for row, form in enumerate(data):
+#                 for column, item in enumerate(form):
+#                     if column == 0:
+#                         chkBoxItem = QTableWidgetItem(str(item))
+#                         chkBoxItem.setFlags(QtCore.Qt.ItemIsUserCheckable |
+#                             QtCore.Qt.ItemIsEnabled)
+#                         chkBoxItem.setCheckState(QtCore.Qt.Checked)
+#                         self.ui.tableWidget_2.setItem(row, column, chkBoxItem)
+#                     else:
+#                         self.ui.tableWidget_2.setItem(row, column, QTableWidgetItem(str(item)))
+#                     column += 1
 
-                row_positon = self.ui.tableWidget_2.rowCount()
-                if row < len(data)-1:
-                    self.ui.tableWidget_2.insertRow(row_positon)
-        conn.close()
+#                 row_positon = self.ui.tableWidget_2.rowCount()
+#                 if row < len(data)-1:
+#                     self.ui.tableWidget_2.insertRow(row_positon)
+#         conn.close()
 
-    def showDataPage(self):
-        self.ui.tableWidget_3.clearContents()
-        self.ui.tableWidget_3.setRowCount(0)
-        conn = sqlite3.connect('db_app.db')
-        cur = conn.cursor()
-        cur.execute('SELECT `userId`, `username`, `folder_upload` FROM Fanpages')
-        data = cur.fetchall()
-        if data:
-            self.ui.tableWidget_3.insertRow(0)
-            for row, form in enumerate(data):
-                for column, item in enumerate(form):
-                    if column == 0:
-                        chkBoxItem = QTableWidgetItem(str(item))
-                        chkBoxItem.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                            QtCore.Qt.ItemIsEnabled)
-                        chkBoxItem.setCheckState(QtCore.Qt.Checked)
-                        self.ui.tableWidget_3.setItem(row, column, chkBoxItem)
-                    else:
-                        self.ui.tableWidget_3.setItem(row, column, QTableWidgetItem(str(item)))
-                    column += 1
+#     def showDataPage(self):
+#         self.ui.tableWidget_3.clearContents()
+#         self.ui.tableWidget_3.setRowCount(0)
+#         conn = sqlite3.connect('db_app.db')
+#         cur = conn.cursor()
+#         cur.execute('SELECT `userId`, `username`, `folder_upload` FROM Fanpages')
+#         data = cur.fetchall()
+#         if data:
+#             self.ui.tableWidget_3.insertRow(0)
+#             for row, form in enumerate(data):
+#                 for column, item in enumerate(form):
+#                     if column == 0:
+#                         chkBoxItem = QTableWidgetItem(str(item))
+#                         chkBoxItem.setFlags(QtCore.Qt.ItemIsUserCheckable |
+#                             QtCore.Qt.ItemIsEnabled)
+#                         chkBoxItem.setCheckState(QtCore.Qt.Checked)
+#                         self.ui.tableWidget_3.setItem(row, column, chkBoxItem)
+#                     else:
+#                         self.ui.tableWidget_3.setItem(row, column, QTableWidgetItem(str(item)))
+#                     column += 1
 
-                row_positon = self.ui.tableWidget_3.rowCount()
-                if row < len(data)-1:
-                    self.ui.tableWidget_3.insertRow(row_positon)
-        conn.close()
-
-    
+#                 row_positon = self.ui.tableWidget_3.rowCount()
+#                 if row < len(data)-1:
+#                     self.ui.tableWidget_3.insertRow(row_positon)
+#         conn.close()
 
     
+
+    
     
 
 
-    def edit_data(self, video_folder, uid, type_):
-        conn = sqlite3.connect('db_app.db')
-        cur = conn.cursor()
-        if type_ == 0:
-            # path = cur.execute('SELECT folder_upload from user WHERE folder =?',(video_folder,))
-            # if path.fetchall() == []:
-            cur.execute(
-                'UPDATE Profiles SET folder_upload=? WHERE userId=?',(video_folder, uid))
-            conn.commit()
-            # else:
-            #     self.ui.statusbar.showMessage(self._translate("MainWindow","Video folder already exists"))
-            #     return False
-            conn.close()
-            self.ui.statusbar.showMessage("Videos folder saved")
-            self.showDataProfile()
-        if type_ == 1:
-            # path = cur.execute('SELECT folder_upload from user WHERE folder =?',(video_folder,))
-            # if path.fetchall() == []:
-            cur.execute(
-                'UPDATE Fanpages SET folder_upload=? WHERE userId=?',(video_folder, uid))
-            conn.commit()
-            # else:
-            #     self.ui.statusbar.showMessage(self._translate("MainWindow","Video folder already exists"))
-            #     return False
-            conn.close()
-            self.ui.statusbar.showMessage("Videos folder saved")
-            self.showDataPage()
+#     def edit_data(self, video_folder, uid, type_):
+#         conn = sqlite3.connect('db_app.db')
+#         cur = conn.cursor()
+#         if type_ == 0:
+#             # path = cur.execute('SELECT folder_upload from user WHERE folder =?',(video_folder,))
+#             # if path.fetchall() == []:
+#             cur.execute(
+#                 'UPDATE Profiles SET folder_upload=? WHERE userId=?',(video_folder, uid))
+#             conn.commit()
+#             # else:
+#             #     self.ui.statusbar.showMessage(self._translate("MainWindow","Video folder already exists"))
+#             #     return False
+#             conn.close()
+#             self.ui.statusbar.showMessage("Videos folder saved")
+#             self.showDataProfile()
+#         if type_ == 1:
+#             # path = cur.execute('SELECT folder_upload from user WHERE folder =?',(video_folder,))
+#             # if path.fetchall() == []:
+#             cur.execute(
+#                 'UPDATE Fanpages SET folder_upload=? WHERE userId=?',(video_folder, uid))
+#             conn.commit()
+#             # else:
+#             #     self.ui.statusbar.showMessage(self._translate("MainWindow","Video folder already exists"))
+#             #     return False
+#             conn.close()
+#             self.ui.statusbar.showMessage("Videos folder saved")
+#             self.showDataPage()
 
     
         
-    def checkLicense(self):
-        import app
-        keytool = app.create_key("Reup Reels")
-        http = app.HttpReq(self, key_reg=keytool, tool_name="Reup Reels")
-        http.request()
-        dirr = open('key.txt', 'w')
-        dirr.write(str(keytool))
-        dirr.close()
+#     def checkLicense(self):
+#         import app
+#         keytool = app.create_key("Reup Reels")
+#         http = app.HttpReq(self, key_reg=keytool, tool_name="Reup Reels")
+#         http.request()
+#         dirr = open('key.txt', 'w')
+#         dirr.write(str(keytool))
+#         dirr.close()
 
 
 if __name__ == '__main__':
